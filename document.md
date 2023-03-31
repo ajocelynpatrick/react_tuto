@@ -138,5 +138,41 @@ ReactDOM.render(<Person/>, document.querySelector("#p1"));
 ```
 
 Le résultat est:
-![](img/res2.png)
+<img src="img/res2.png" width="50%">
+
+### 2.4 Paramètre d'un composant (ou props)
+Dans l'exemple d'avant, nous avons un composant figée (nom Max, Age 48). Ce serait bien de pouvoir les paramétrer pour créer d'autres composants. Pour cela, nous allons utiliser le concept de `props` (pour "properties").
+
+Comment utiliser les `props`pour pouvoir fixer des arguments?
+Comme dans tout appel de fonction, les valeurs des arguments sont fixés lors de l'appel. Il nous faut modifier le code de la fonction comme suit:
+
+```js
+function Person(props){
+  return (
+    <div className="person">
+      <h1>{props.name}</h1>
+      <p>{props.age}</p>
+    </div>
+  );
+}
+```
+
+Cela signifie que nous avons défini deux propriétés (ou arguments), `name` et `age`. Remarquez la syntaxe avec une seule paire d'accolage `{props.name}` et `{props.age}`.
+
+L'appel se fera en spécifiant cette fois-ci la valeur que nous souhaiterons donner à ces `props`que nous venons de définir, comme ceci:
+
+et le code d'appel sera
+
+```js
+ReactDOM.render(<Person name="Patrick" age="42"/>,
+                document.querySelector('#p1'));
+```
+
+Mes nouveaux codes:
+* rajout d'un nouvel id en HTML (id="p2")
+* Appel de render deux fois sur deux instances du composants avec des arguments différents.
+
+![](img/props_code.png)
+
+On remarquera que l'affichage n'est pas comme on l'a spécifié dans le CSS (inline ou en ligne) mais plutôt en bloc (ou passer à la ligne après chaque affichage - c'est à cause du fait qu'un div est toujours par défaut en affichage block et que le fait de faire le rendu sur 2 div différent, force le html à aller à la ligne (affichage block) même si on l'a spécifié dans le css qu'on voulait un inline)
 
