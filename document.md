@@ -176,3 +176,38 @@ Mes nouveaux codes:
 
 On remarquera que l'affichage n'est pas comme on l'a spécifié dans le CSS (inline ou en ligne) mais plutôt en bloc (ou passer à la ligne après chaque affichage - c'est à cause du fait qu'un div est toujours par défaut en affichage block et que le fait de faire le rendu sur 2 div différent, force le html à aller à la ligne (affichage block) même si on l'a spécifié dans le css qu'on voulait un inline)
 
+### 2.5 Application au sens React
+Dans l'exemple précédent, nous appelions deux fois la fonction `ReactDOM.render()` pour afficher deux fois le composant.
+Pour éviter cela, nous allons modifier notre HTML pour ne pas avoir `id="p1"`et `id="p2"`. Nous allons juste mettre un seul id, appelé arbitrairement `app`.
+
+```html
+<div id="app"></div>
+```
+
+Nous allons modifier le js en rajoutant une instanciation d'une variable ui contiendra un JSX avec plusieurs instanciation du composant `<Person ... .../>`
+
+```js
+function Person(){
+  return (
+    <div className="person">
+      <H1>Max</H1>
+      <p>your age : 42</p>
+    </div>
+  );
+}
+
+// rajouter la variable app (ou autre nom)
+var mavarJSX =(
+  <div>
+      <Person name="Patou" age="42"/>
+      <Person name="André" age="95"/>
+      <Person name="Luc" age="105"/>
+  </div>
+)
+// modifier l'appel afin qu'on n'ait plus qu'un seul render, mais qui rend pas une instance du composant mais la variable qui contient le JSX dans le nouveau div que nous souhaitons utiliser (app)
+ReactDOM.render(mavarJSX, 
+                document.querySelector('#app'));
+```
+
+Le résultat est:
+![](img/res3.png)
