@@ -211,3 +211,11 @@ ReactDOM.render(mavarJSX,
 
 Le résultat est:
 ![](img/res3.png)
+
+## 3. Prévue de la suite:
+
+Ci-dessous la liste des sujets à travailler dans ce cours. 
+
+
+![](img/course_outiline.png)
+
