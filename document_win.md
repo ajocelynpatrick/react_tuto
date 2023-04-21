@@ -478,6 +478,188 @@ console.log(person3.name);
 
 De la documentation ici [tab_array_method](https://waytolearnx.com/2019/06/10-methodes-de-tableau-dans-javascript-a-connaitre.html).
 
+## V. Workflow de développement React
+
+### 5.1 Le workflow de developpement
+L'objectif est de créer un environnement de build. Faire un projet demande plus qu'executer du code sur `www.codepen.io`, donc nous allons monter un environnement.
+
+Pour cela nous devons avoir un environnement qui permet de:
+* optimiser nos codes
+* executer du js de nouvelles generation (la config babbel par exemple)
+* être plus productif en utilisant les bons outils (lint par exemple, css auto-prefixing pour la prise en charge de différents navigateurs)
+
+Comment peut-on arriver à ce stade?
+* Il nous faudrait avoir un outil de getion de dépédance (`yarn`ou `npm`). Ce qu'on appelle `dépendance` sont les tous les outils/librairies avec des versions spécifiques, qui permettent à notre code de fonctionner correctement (`Babbel`, une version spécifique de `React`, ...). 
+* Il nous faudrait aussi un `Bundler`, qui permet de package plusieurs fichiers (car quand on écrira des fichier de code, ils seront séparé sur plusieurs fichiers pour se concentrer sur leur propre focus chacun). Dans notre cas `Webpack`(débit moyen) sera l'outil que nous choisirons. Pour voir ce que fait un bundler dans la réalité, lire ce que fait [webpack dans wikipedia](https://fr.wikipedia.org/wiki/Webpack)
+* Nous aurons besoin d'un compilateur comme `Babbel` pour supporter les js de nouvelles générations.
+* un server de dev pour tester notre code.
+
+### 5.1 L'outil "create react app"
+C'est un outil qui permet de faire du dev react. 
+On peut aller le récupérer [create react app](https://create-react-app.dev/)
+Avant d'avancer avec cet outil, il est plus intéressant d'installer NVM (tel qu'il est décrit dans [install node version manager](https://heynode.com/tutorial/install-nodejs-locally-nvm/)). Cela permet de ne pas avoir à gérer les versions différentes de NodeJs. 
+
+Une fois que vous avez installé `NVM`. Créer un répertoire pour votre developpement React (`~/home/debian/dev_react` - c'est mon chemin local). 
+Ensuite,utiliser NVM pour installer une version (ou pla plus récente version) de Nodejs.
+
+![](img/install_nodejs.png)
+
+Une fois que vous avez installé nodejs avec nvm, vous avez alors la possibilité d'utiliser la commande `npm`(Node Package Manager).
+
+Avant de continuer, vous pouvez installer l'outil `yarn` avec la commande ci-dessous comme décrit dans [install yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable).
+
+```sh 
+debian@debian11: ~/react_dev$ npm install yarn -g
+```
+
+Rechercher le package `create-react-appàvec la commande 
+```sh 
+debian@debian11: ~/react_dev$ npm search create-react-app
+```
+Il se peut que npm vous propose de mettre à jour votre version de npm avant de pouvoir continuer (lisez bien le retour de la commande)
+
+Tapez la commande suivante pour installer `create-react-app` sur la machine (pas seulement dans le répertoire)
+
+```sh 
+debian@debian11: ~/react_dev$ npm install create-react-app -g
+```
+Si vous obtenez un genre d'erreur comme suit:
+
+```sh
+npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap.
+```
+
+alors mettez à jour le package `tar` avec la commande `npm install tar@latest`.
+
+Les commandes lancées ci-dessus, auront pour effet de créer des fichiers dans le répertoire de travail
+
+```sh
+debian@debian11:~/react_dev$ ls
+node_modules  package.json  package-lock.json
+```
+
+Il faudra ensuite créer une application `React`avec la commande `create react app` avec la syntaxe suivante: 
+
+`create react app <nom_app> --scripts-version <version>`
+
+NB: l'option `--scripts-version` permet de s'assurer que nous ayons la même version de structure de fichier de départ et non pas chacun différent dans son coin.
+Dans notre exemple, nous allons utiliser le nom "react-complet-guide" (comme l'auteur du tuto l'a fait). et une version "1.1.5" de la structure de fichier
+
+```sh
+~$ create react app react-complet-guide --scripts-version 1.1.5
+```
+Cette commande va mouliner et lancer plein d'action (avec éventuellement des erreurs mais ne pas s'inquiéter). 
+
+Pour ma part, pas d'erreur, j'ai ceci comme sorti de la commande
+
+![](img/_nouveau_create_react_application.png)
+
+Pour tester le lancement de l'application générée, il faut entrer dans le répertoire `react-complete-guide` qui a été créée par la commande et tester le lancement de l'application par `npm start` ou `yarn start`
+
+![](img/lancement_appli_neuf.png)
+
+Le résultat permet d'obtenir la fenêtre suivante (la console et une fenêtre Chrome qui contient l'execution en temps réel de notre application).
+
+![](img/resultat_lancement.png)
+
+Pour l'arrêter, fermer la fenêtre chrome et taper sur `Ctrl+C` dans la console.
+
+### 5.2 Comprendre la structure de fichiers
+Pour la suite, nous allons ouvrir le répertoire complet de l'application "react-complet-guide" dans un outil comme `vscode`. 
+Voici la structure de fichier qui a été générée:
+
+![](img/app_file_structure.png)
+
+Nous devrions avoir exactement les mêmes fichiers. 
+* Le fichier `package.lock.json`permet de figer des version de dépendances.
+
+* Le fichier `package.json` nous donne la version des dépendances que nous utilisons dans le projet:
+  - Nous avons 3 dépendances avec chacun leur versions:
+    ```json
+    "dependencies": {
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-scripts": "1.1.5"
+    }
+    ```
+      + `react` est la version de react utilisé pour l'application
+      + `react-dom` également pour avoir react.
+      + `react-scripts` est la version de l'ensemble de script qui nous fournit le workflow qui nous permet d'avoir les commandes `start` , `build`, `test`, ...
+
+* Le répertoire `node_modules` contient toutes les dépendances (et sous-dépendances) utiles à notre app. Ce répertoire ne devrait pas être modifié. 
+![](img/node_modules_folder.png)
+
+* Le répertoire `public` est le répertoire qui est servit par le serveur web à la fin.
+![](img/public_folder.png)
+
+  - le fichier `favicon.ico`. 
+  Il contient le fichier `favicon.ico` (icon de la page par exemple.) 
+
+  - le fichier `index.html`
+    C'est le fichier qui va être servit par le serveur web. Nous ne rajouterons pas d'autres fichiers `html` dans ce répertoire. Ce fichier `index.html` recevra le code que nous développerons (ce code sera injecté par le workflow de dev dans ce fichier et nous n'avons rien à faire de ce côté là). Dans ce fichier, aucun autre élément html ne sera rajouté. Le fichier contient entre autre, une section comme suit:
+      ```html
+          <div id="root"></div>
+      ```
+    C'est l'élément qui servira de point de montage de notre application React plus tard.
+    Dans l'en-tête de ce fichier, cependant, on pourra rajouter des importations de fichiers de style css ou  de méta-information.
+  - le fichier `manifest.json` contient des méta-information (des descriptions typiquement) des éléments (ex: icônes...) utilisés par l'appli.
+* le répertoire `src` contient le code source de notre application. 
+![](img/source_folder.png)
+On retrouver quelques fichiers très important:
+  - le fichier `App.js` qui contient notre application React. Brièvement, ce fichier contient un composant react écrit en utilisant du JSX.
+  - le fichier `index.js`, est le fichier qui fait le lien entre `public/index.html` et notre fichier application `App.js`. 
+  En l'occurence, `index.js` donne accès à la section identifiée `root` (dont on parlait plus haut dans le fichier `public/index/html`) afin de faire le rendu de l'applciation `App`avec la méthode `render()` (déjà vu en section 2)
+  - le fichier `App.css` définit quelques styles css de notre application. 
+  - le fichier `index.css` qui est encore une feuille style.
+  - le fichier `registerServiceWorker.js` est un fichier genéré et permet de fournir l'infrastructure nécéssaire à la bonne exécution de notre code.
+  - le fichier `App.test` permet de créer des tests unitaires (à voir plus tard)
+     ![](img/contenu_index_js1.png)
+
+### 5.3 Première manipulation de l'application
+Commençons par éditer le fichier `App.js`. 
+* Lancez votre application en entrant dans le répertoire de l'application que nous avons créé en section 5.1 et tapant à la console `npm start` ou `yarn start`. Votre console doit afficher que ça tourne et le serveur web doit tourner dans un navigateur. 
+
+Modifiez votre `App.js` pour ressembler à ceci (supprimer toutes les selectionnées entre les lignes entre 8 et 16).
+
+![](img/lig_suppr.png)
+
+Remplacer votre code  `App.js` par ceci:
+
+```js
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <h1>
+            Hello, je suis une app React
+        </h1>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+Enregistrez et remarquez que la page se rafraîchit toute seule sans qu'on ait à faire quoi que ce soit (la recompilation est automatique dès lors qu'on a modifié notre code).
+
+![](img/exec_app_modifie.png)
+
+Le fichier `logo.svg`, par conséquence, n'est plus utilisé donc on peut le supprimer (ne pas oublier d'enlever l'appel dans `App.js`)
+
+De la même manière, nous allons aussi nettoyer le fichier `App.css` pour ne garder que le premier style (le reste est à supprimer)
+
+```css
+.App {
+  text-align: center;
+}
+```
+
+La majorité de notre travail en tant que developpeur React se trouve dans `App.js` ou dans de nouvelles composants React, que nous aurons à créer. 
+
+Dans la suite, nous verrons donc un peu plus en profondeur les JSX et comment nous pourrons rajouter plus de composants à notre application React.
+
+
+
 
 
 
